@@ -74,6 +74,11 @@ async function run() {
             res.send(result);
         })
 
+        app.post("/donation-requests", async(req, res) => {
+            const donationRequest = req.body;
+            const result = await donationRequestsCollection.insertOne(donationRequest);
+            res.send(result);
+        })
         
 
 
