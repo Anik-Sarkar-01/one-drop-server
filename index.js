@@ -25,10 +25,31 @@ async function run() {
         await client.connect();
         const database = client.db("oneDropDB");
         const usersCollection = database.collection("users");
+        const donationRequestsCollection = database.collection("donationRequests")
 
-        app.get("/users", async(req, res) => {
+
+        // user related apis
+        app.get("/users", async (req, res) => {
             const result = await usersCollection.find().toArray();
             res.send(result);
+        })
+
+        app.get("/users/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            res.send(user);
+        })
+
+        app.get("/users/admin/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let admin = false;
+            if (user) {
+                admin = user?.role === "admin";
+            }
+            res.send({ admin });
         })
 
         app.post("/users", async (req, res) => {
@@ -41,6 +62,19 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
+
+        app.put("/user/:email", async (req, res) => {
+            const user = req.body;
+            const email = req.params.email;
+            const filter = { email: email };
+            const updatedUser = {
+                $set: user,
+            };
+            const result = await usersCollection.updateOne(filter, updatedUser);
+            res.send(result);
+        })
+
+        
 
 
         // Send a ping to confirm a successful connection
