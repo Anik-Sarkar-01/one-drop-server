@@ -74,10 +74,18 @@ async function run() {
             res.send(result);
         })
 
+        // donation requests related apis
         app.get("/donation-requests/:email", async(req, res) => {
             const email = req.params.email;
             const query = {requesterEmail: email};
             const result = await donationRequestsCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        app.get("/recent-requests/:email", async(req, res) => {
+            const email = req.params.email;
+            const query = {requesterEmail: email};
+            const result = await donationRequestsCollection.find(query).sort({"_id" : -1}).limit(3).toArray();
             res.send(result);
         })
 
