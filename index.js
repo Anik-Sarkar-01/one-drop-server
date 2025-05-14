@@ -76,37 +76,72 @@ async function run() {
         })
 
         // donation requests related apis
-        app.get("/donation-requests", async(req, res) => {
+        app.get("/donation-requests", async (req, res) => {
             const result = await donationRequestsCollection.find().toArray();
             res.send(result);
         })
-        app.get("/donation-requests/:email", async(req, res) => {
+
+        app.get("/donation-requests/:email", async (req, res) => {
             const email = req.params.email;
-            const query = {requesterEmail: email};
+            const query = { requesterEmail: email };
             const result = await donationRequestsCollection.find(query).toArray();
             res.send(result);
         })
 
-        app.get("/recent-requests/:email", async(req, res) => {
+        app.get("/recent-requests/:email", async (req, res) => {
             const email = req.params.email;
-            const query = {requesterEmail: email};
-            const result = await donationRequestsCollection.find(query).sort({"_id" : -1}).limit(3).toArray();
+            const query = { requesterEmail: email };
+            const result = await donationRequestsCollection.find(query).sort({ "_id": -1 }).limit(3).toArray();
             res.send(result);
         })
 
-        app.post("/donation-requests", async(req, res) => {
+        app.post("/donation-requests", async (req, res) => {
             const donationRequest = req.body;
             const result = await donationRequestsCollection.insertOne(donationRequest);
             res.send(result);
         })
 
+        // Example: GET /donors/search?bloodGroup=A+&district=Dhaka&upazila=Uttara
+
+        app.get("/search-donor", async (req, res) => {
+            const { bloodGroup, district, upazila } = req.query;
+
+            const query = {};
+
+            if (bloodGroup) {
+                query.bloodGroup = bloodGroup;
+            }
+
+            if (district) {
+                query.recipientDistrict = district;
+            }
+
+            if (upazila) {
+                query.recipientUpazila = upazila;
+            }
+
+            const result = await donationRequestsCollection.find(query).toArray();
+            res.send(result);
+        });
+
+
+
+
         // blog related apis
-        app.post("/blogs", async(req, res) => {
+        app.get("/blogs", async (req, res) => {
+            const result = await blogCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.post("/blogs", async (req, res) => {
             const blog = req.body;
             const result = await blogCollection.insertOne(blog);
             res.send(result);
         })
-        
+
+
+
+
 
 
         // Send a ping to confirm a successful connection
