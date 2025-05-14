@@ -75,6 +75,10 @@ async function run() {
         })
 
         // donation requests related apis
+        app.get("/donation-requests", async(req, res) => {
+            const result = await donationRequestsCollection.find().toArray();
+            res.send(result);
+        })
         app.get("/donation-requests/:email", async(req, res) => {
             const email = req.params.email;
             const query = {requesterEmail: email};
