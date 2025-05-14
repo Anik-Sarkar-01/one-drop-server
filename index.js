@@ -25,7 +25,8 @@ async function run() {
         await client.connect();
         const database = client.db("oneDropDB");
         const usersCollection = database.collection("users");
-        const donationRequestsCollection = database.collection("donationRequests")
+        const donationRequestsCollection = database.collection("donationRequests");
+        const blogCollection = database.collection("blogs");
 
 
         // user related apis
@@ -96,6 +97,13 @@ async function run() {
         app.post("/donation-requests", async(req, res) => {
             const donationRequest = req.body;
             const result = await donationRequestsCollection.insertOne(donationRequest);
+            res.send(result);
+        })
+
+        // blog related apis
+        app.post("/blogs", async(req, res) => {
+            const blog = req.body;
+            const result = await blogCollection.insertOne(blog);
             res.send(result);
         })
         
