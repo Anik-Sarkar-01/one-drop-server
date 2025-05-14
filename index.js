@@ -101,7 +101,6 @@ async function run() {
             res.send(result);
         })
 
-        // Example: GET /donors/search?bloodGroup=A+&district=Dhaka&upazila=Uttara
 
         app.get("/search-donor", async (req, res) => {
             const { bloodGroup, district, upazila } = req.query;
@@ -123,8 +122,6 @@ async function run() {
             const result = await donationRequestsCollection.find(query).toArray();
             res.send(result);
         });
-
-
 
 
         // blog related apis
