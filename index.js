@@ -83,15 +83,28 @@ async function run() {
 
         app.get('/pending-donation-requests', async (req, res) => {
             const status = req.query.status;
-            console.log(status);
             const query = { donationStatus: status }
             const result = await donationRequestsCollection.find(query).toArray();
             res.send(result);
         });
 
-        app.get('/request-details/:id', async(req, res) => {
+        app.patch("/pending-donation-requests/:id", async (req, res) => {
+            const donationRequest = req.body;
             const id = req.params.id;
-            const query = {_id : new ObjectId(id)};
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+
+            const updatedRequest = {
+                $set: donationRequest,
+            };
+
+            const result = await donationRequestsCollection.updateOne(filter, updatedRequest, options);
+            res.send(result);
+        })
+
+        app.get('/request-details/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
             const result = await donationRequestsCollection.findOne(query);
             res.send(result);
         })
@@ -151,6 +164,8 @@ async function run() {
             const result = await blogCollection.insertOne(blog);
             res.send(result);
         })
+
+
 
 
 
