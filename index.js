@@ -159,6 +159,13 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/published-blogs", async(req, res) => {
+            const status = req.query.status;
+            const query = {status : status};
+            const result = await blogCollection.find(query).toArray();
+            res.send(result);
+        })
+
         app.post("/blogs", async (req, res) => {
             const blog = req.body;
             const result = await blogCollection.insertOne(blog);
