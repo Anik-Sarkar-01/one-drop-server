@@ -133,22 +133,17 @@ async function run() {
 
         app.get("/search-donor", async (req, res) => {
             const { bloodGroup, district, upazila } = req.query;
-
-            const query = {};
-
+            const query = { role: "donor" };
             if (bloodGroup) {
                 query.bloodGroup = bloodGroup;
             }
-
             if (district) {
-                query.recipientDistrict = district;
+                query.district = district;
             }
-
             if (upazila) {
-                query.recipientUpazila = upazila;
+                query.upazila = upazila;
             }
-
-            const result = await donationRequestsCollection.find(query).toArray();
+            const result = await usersCollection.find(query).toArray();
             res.send(result);
         });
 
@@ -159,16 +154,16 @@ async function run() {
             res.send(result);
         })
 
-        app.get("/published-blogs", async(req, res) => {
+        app.get("/published-blogs", async (req, res) => {
             const status = req.query.status;
-            const query = {status : status};
+            const query = { status: status };
             const result = await blogCollection.find(query).toArray();
             res.send(result);
         })
 
-        app.get("/blog-details/:id", async(req, res) => {
+        app.get("/blog-details/:id", async (req, res) => {
             const id = req.params.id;
-            const query = {_id : new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await blogCollection.findOne(query);
             res.send(result);
         })
