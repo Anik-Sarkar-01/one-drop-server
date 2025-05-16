@@ -75,6 +75,27 @@ async function run() {
             res.send(result);
         })
 
+        app.patch("/change-user-status/:id", async (req, res) => {
+            const status = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedStatus = {
+                $set: status,
+            }
+            const result = await usersCollection.updateOne(filter, updatedStatus);
+            res.send(result);
+        })
+        app.patch("/change-user-role/:id", async (req, res) => {
+            const role = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedRole = {
+                $set: role,
+            }
+            const result = await usersCollection.updateOne(filter, updatedRole);
+            res.send(result);
+        })
+
         // donation requests related apis
         app.get("/donation-requests", async (req, res) => {
             const result = await donationRequestsCollection.find().toArray();
@@ -87,20 +108,6 @@ async function run() {
             const result = await donationRequestsCollection.find(query).toArray();
             res.send(result);
         });
-
-        app.patch("/pending-donation-requests/:id", async (req, res) => {
-            const donationRequest = req.body;
-            const id = req.params.id;
-            const filter = { _id: new ObjectId(id) };
-            const options = { upsert: true };
-
-            const updatedRequest = {
-                $set: donationRequest,
-            };
-
-            const result = await donationRequestsCollection.updateOne(filter, updatedRequest, options);
-            res.send(result);
-        })
 
         app.get('/request-details/:id', async (req, res) => {
             const id = req.params.id;
@@ -127,6 +134,50 @@ async function run() {
         app.post("/donation-requests", async (req, res) => {
             const donationRequest = req.body;
             const result = await donationRequestsCollection.insertOne(donationRequest);
+            res.send(result);
+        })
+
+
+        app.patch("/pending-donation-requests/:id", async (req, res) => {
+            const donationRequest = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+
+            const updatedRequest = {
+                $set: donationRequest,
+            };
+
+            const result = await donationRequestsCollection.updateOne(filter, updatedRequest, options);
+            res.send(result);
+        })
+
+        app.patch("/change-donation-status/:id", async (req, res) => {
+            const status = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedStatus = {
+                $set: status,
+            }
+            const result = await donationRequestsCollection.updateOne(filter, updatedStatus);
+            res.send(result);
+        })
+
+        app.patch("/update-donation-request/:id", async (req, res) => {
+            const request = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedRequest = {
+                $set: request,
+            }
+            const result = await donationRequestsCollection.updateOne(filter, updatedRequest);
+            res.send(result)
+        })
+
+        app.delete("/donation-requests/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await donationRequestsCollection.deleteOne(query);
             res.send(result);
         })
 
