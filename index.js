@@ -27,6 +27,7 @@ async function run() {
         const usersCollection = database.collection("users");
         const donationRequestsCollection = database.collection("donationRequests");
         const blogCollection = database.collection("blogs");
+        const featuredDonorsCollection = database.collection("featuredDonors")
 
 
         // user related apis
@@ -242,6 +243,13 @@ async function run() {
             const result = await blogCollection.deleteOne(query);
             res.send(result);
         })
+
+        // featured donors related api
+         app.get("/featured-donors", async (req, res) => {
+            const result = await featuredDonorsCollection.find().toArray();
+            res.send(result);
+        })
+
 
 
         // Send a ping to confirm a successful connection
