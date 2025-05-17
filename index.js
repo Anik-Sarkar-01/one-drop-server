@@ -225,11 +225,23 @@ async function run() {
             res.send(result);
         })
 
+        app.patch("/blogs/:id", async (req, res) => {
+            const status = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedStatus = {
+                $set: status,
+            }
+            const result = await blogCollection.updateOne(filter, updatedStatus);
+            res.send(result)
+        })
 
-
-
-
-
+        app.delete("/blogs/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await blogCollection.deleteOne(query);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
